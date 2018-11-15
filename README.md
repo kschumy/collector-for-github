@@ -5,7 +5,7 @@ An AWS Lambda to query GitHub and post results
 ## Setup
 1. Create an S3 bucket.
     1. The bucket must be private, but your AWS account must have read/write permission. 
-    1. The bucket name will later be the env variable `BUCKET_NAME` and the region will be `AWS_REGION` (but this should be completed for you by the Lambda).
+    1. The bucket name will later be the env variable `BUCKET_NAME` and the region will be `AWS_REGION` (but this should be completed for you by the Lambda and should not be manually added to the evn vars).
 1. Upload the `config.yaml` file to the bucket. You can change the file name if you choose.
     1. Your AWS account must have read/write permission to the file.
     1. The file name will later be the env variable `CONFIG_FILE_NAME`.
@@ -34,7 +34,12 @@ $ echo ${cmd#*Team}
 The lambda may report failing the first time(s) it is run. Check the logs for the reason. If there are more than 120 issues, it will do them in batched but will "fail" between runs until it has processed all the issues. Check the logs for more information if you get errors.
 
 ## Known Issues
-- TODO
+- Throttling on posting issues/managing the Lambda time limit is very poorly implemented. 
+  - Getting all issues but only posting 20 doesn't make sense. The package the program uses will eventually allow for the user to specify how many should be queried for, and this program will use this feature in the future.
+  - Force fail and banking on the Lambda to restart is not a great way to deal with processing results.
+- Does not go back and re-search for updated issues that later meet the search criteria. There are no current plans to address this.
 
 ## Possible Features in the Future
-- TODO
+- Connect to Wiki
+- If/when GitHub allows GraphQL to make discussion board posts, the program is planning on switching to that.
+- Manage terms and labels from an external yaml file

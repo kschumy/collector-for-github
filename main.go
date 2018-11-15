@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"../ghquery/pkg/query"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/kubicorn/kubicorn/pkg/logger"
 	"query-lambda/internal"
 )
@@ -36,8 +37,8 @@ type Response struct {
 }
 
 func main() {
-	manageProgram()
-	//lambda.Start(manageProgram)
+	//manageProgram()
+	lambda.Start(manageProgram)
 }
 
 //
@@ -89,7 +90,7 @@ func queryForIssues(startTime time.Time) ([]*query.GitHubIssue, error) {
 //
 func postAllIssues(issues []*query.GitHubIssue, configFile *internal.Config) error {
 	for i, issue := range issues {
-		if i == 120 {
+		if i == 20 {
 			return fmt.Errorf("timedout before finishing. Created %v out of %v. Lambda will re-run if it can", i, len(issues))
 		}
 
