@@ -7,7 +7,7 @@ import (
 
 type resultsInterface interface {
 	GetIssues() []github.Issue
-	GetPRs()    []github.PR
+	GetPRs() []github.PR
 
 	GetLastCreatedIssueTime() *time.Time
 	GetLastCreatedPRTime() *time.Time
@@ -18,7 +18,7 @@ type results struct {
 	prs    []github.PR
 
 	lastCreatedIssue *time.Time
-	lastCreatedPR *time.Time
+	lastCreatedPR    *time.Time
 }
 
 func (results *results) GetIssues() []github.Issue {
@@ -72,4 +72,3 @@ func (results *results) GetLastCreatedPRTime() *time.Time {
 	}
 	return results.lastCreatedPR
 }
-

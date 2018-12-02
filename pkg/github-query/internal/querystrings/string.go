@@ -81,7 +81,6 @@ func (qs *QueryStrings) BuildQueryStringFactory(input *RequestProvider) (func(ti
 	//}
 	relativeTime := (*input).GetRelativeTime()
 
-
 	return func(newDate time.Time) (string, error) {
 		err := relativeTime.SetTime(newDate)
 		if err != nil {

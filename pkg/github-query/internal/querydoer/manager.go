@@ -51,7 +51,6 @@ func (manager *doQueryManager) GetPRs() []github.PR {
 	return manager.prResults
 }
 
-
 func (manager *doQueryManager) doQuery() error {
 	logger.Level = 4
 	queryResults, expectedTotalResults, err := manager.getResultsFromGitHub()
@@ -146,7 +145,6 @@ func (manager *doQueryManager) getResultsFromGitHub() (json.RawMessage, int, err
 
 	return githubResults.Data.Search.Results, githubResults.Data.Search.ResultsCount, nil
 }
-
 
 //
 func (manager *doQueryManager) addToResults(message *json.RawMessage) (int, error) {

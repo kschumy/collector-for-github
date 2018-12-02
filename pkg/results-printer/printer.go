@@ -24,7 +24,6 @@ func main() {
 	}
 }
 
-
 func writeResults(request *issue.IssuesRequest, results []Issue) error {
 	requestTime := request.GetRelativeTime().GetTime().Local()
 	file, err := os.Create(fmt.Sprintf("results/%d-%02d-%02d-%02d-%02d.txt", requestTime.Year(), requestTime.Month(), requestTime.Day(), requestTime.Minute(), requestTime.Second()))
@@ -34,10 +33,10 @@ func writeResults(request *issue.IssuesRequest, results []Issue) error {
 	defer file.Close()
 
 	fmt.Fprintf(file, fmt.Sprintf("For after %s,\n found %d results for:\n%+v\n\n", requestTime.String(), len(results), request))
-	for i, result := range results{
+	for i, result := range results {
 		fmt.Fprintf(file, fmt.Sprintf(
 			"%d. Title: %s\n\t- Repo: %s\n\t- User: %s\n\t- Created: %s\n\t- Labels: %s\n\t- URL: %s\n\n",
-			i + 1,
+			i+1,
 			result.GetTitle(),
 			result.GetRepoName(),
 			result.GetAuthorLogin(),

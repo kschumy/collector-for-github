@@ -13,6 +13,7 @@ type Assignee struct {
 	Name    string `json:"name"`
 	Company string `json:"company"`
 }
+
 //
 //func (assignees Assignees) GetLogins() []string {
 //	fmt.Printf("%+v", assignees)

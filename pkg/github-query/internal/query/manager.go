@@ -80,7 +80,7 @@ func (manager *Manager) doQueryForIssues() (resultsInterface, error) {
 	newDoQueryInput := querydoer.DoQueryInput{
 		QueryFactory:      queryStringFunc,
 		RelativeTimeStart: (*manager.request).GetRelativeTime(),
-		ObjectType: (*manager.request).GetObjectType(),
+		ObjectType:        (*manager.request).GetObjectType(),
 	}
 	return querydoer.DoQuery(newDoQueryInput)
 }

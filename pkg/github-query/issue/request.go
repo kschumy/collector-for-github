@@ -29,7 +29,6 @@ type IssuesRequest struct {
 	QueryDateTime types.RelativeTime
 }
 
-
 //func (issuesRequest *IssuesRequest) GetGitHubRequest() (*request.GitHubRequest, error) {
 //	return request.GetRequestForIssues(issuesRequest)
 //}

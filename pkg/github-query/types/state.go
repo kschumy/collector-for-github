@@ -5,7 +5,7 @@ import "fmt"
 type (
 	IssueState int
 	PRState    int
-	State int
+	State      int
 )
 
 const (
@@ -67,7 +67,7 @@ func ConvertPRStateToState(prState PRState) (State, error) {
 	}
 }
 
-func ConvertIssueStateToState(issueState IssueState)  (State, error) {
+func ConvertIssueStateToState(issueState IssueState) (State, error) {
 	switch issueState {
 	case AnyIssueState:
 		return AnyStateForIssue, nil

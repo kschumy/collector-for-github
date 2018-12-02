@@ -6,7 +6,6 @@ import (
 	. "github.com/onsi/gomega"
 
 	. "github.com/collector-for-GitHub/pkg/github-query/types"
-
 )
 
 // TESTS: Query

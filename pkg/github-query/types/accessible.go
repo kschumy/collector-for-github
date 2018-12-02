@@ -11,4 +11,3 @@ const (
 func (accessible Accessible) IsValid() bool {
 	return accessible == PublicOrPrivate || accessible == Public || accessible == Private
 }
-

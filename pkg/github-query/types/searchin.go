@@ -1,6 +1,6 @@
 package types
 
-type SearchIn   int
+type SearchIn int
 
 const (
 	AnyLocation SearchIn = iota

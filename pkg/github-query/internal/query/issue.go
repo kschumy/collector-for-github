@@ -34,5 +34,3 @@ func GetIssues(iqr IssueQueryRequest) ([]github.Issue, error) {
 //
 //	return
 //}
-
-

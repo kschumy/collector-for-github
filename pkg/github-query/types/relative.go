@@ -11,4 +11,3 @@ const (
 func (r Relative) IsValid() bool {
 	return r == AnyDateTime || r == AfterDateTime || r == BeforeDateTime
 }
-
