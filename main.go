@@ -8,10 +8,13 @@ import (
 	"strings"
 	"time"
 
-	"../ghquery/pkg/query"
+	"github.com/collector-for-GitHub/internal/awsresource"
+	"github.com/collector-for-GitHub/pkg/github-query/github"
+	"github.com/collector-for-GitHub/pkg/github-query/issue"
+	"github.com/collector-for-GitHub/pkg/github-query/types"
+
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/kubicorn/kubicorn/pkg/logger"
-	"query-lambda/internal"
 )
 
 const (
@@ -44,7 +47,7 @@ func main() {
 //
 func manageProgram() (Response, error) {
 	logger.Level = 3
-	configFile, err := internal.GetYaml()
+	configFile, err := awsresource.GetYaml()
 	if err != nil {
 		return getStandardErrorResponse("config", err)
 	}
@@ -55,7 +58,7 @@ func manageProgram() (Response, error) {
 	}
 
 	err = postAllIssues(issues, configFile)
-	internal.SaveYaml(configFile)
+	awsresource.SaveYaml(configFile)
 	if err != nil {
 		return getStandardErrorResponse("posting", err)
 	}
@@ -71,24 +74,26 @@ func manageProgram() (Response, error) {
 }
 
 //
-func queryForIssues(startTime time.Time) ([]*query.GitHubIssue, error) {
+func queryForIssues(startTime time.Time) ([]*github.Issue, error) {
 	logger.Info("Starting query at: %s: ", startTime.String())
-	return query.Request{
-		QueryTerms:       []string{"aws", "eks"},
-		QueryLabels:      []string{"sig/aws", "area/platform/aws", "area/platform/eks"},
-		GitHubObjectType: query.Issues,
-		SearchIn:         query.InTitle,
-		State:            query.OnlyOpen,
-		OwnerLogin:       "kubernetes",
-		QueryDateTime: query.RequestDateTime{
-			RelativeComparison: query.AfterDateTime,
-			DateTime:           startTime,
-		},
-	}.GetIssues()
+	relativeTime, err := types.NewRelativeTime(types.AfterDateTime, startTime)
+	if err != nil {
+		return nil, err
+	}
+	issueRequest := issue.IssuesRequest{
+		Terms:         []string{"aws", "eks"},
+		Labels:        []string{"sig/aws", "area/platform/aws", "area/platform/eks"},
+		SearchIn:      types.Title,
+		State:         types.Open,
+		OwnerLogin:    "kubernetes",
+		QueryDateTime: *relativeTime,
+	}
+
+	return issueRequest.GetIssues()
 }
 
 //
-func postAllIssues(issues []*query.GitHubIssue, configFile *internal.Config) error {
+func postAllIssues(issues []*github.Issue, configFile *awsresource.Config) error {
 	for i, issue := range issues {
 		if i == 20 {
 			return fmt.Errorf("timedout before finishing. Created %v out of %v. Lambda will re-run if it can", i, len(issues))
@@ -136,7 +141,7 @@ func createPost(info discussionPost) error {
 
 // FIXME: find a way to encode the title
 // TODO: test for other input that will break this program.
-func getObjectInfo(issue query.GitHubIssue) discussionPost {
+func getObjectInfo(issue github.Issue) discussionPost {
 	// Unescaped quotes in titles cause a JSON parsing error when creating a new discussion board post.
 	return discussionPost{
 		Author:      issue.GetAuthorLogin(),
