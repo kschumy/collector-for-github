@@ -24,7 +24,7 @@ func InitializeWithDefault() *RelativeTime {
 }
 
 func NewRelativeTime(relative Relative, dateTime time.Time) (*RelativeTime, error) {
-	convertedTime := convertToUTC(dateTime)
+	convertedTime := ConvertToUTC(&dateTime)
 	err := checkRelativeAndDateTimeCombo(relative, convertedTime)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,7 @@ func NewRelativeTime(relative Relative, dateTime time.Time) (*RelativeTime, erro
 
 	return &RelativeTime{
 		relative: relative,
-		dateTime: convertToUTC(convertedTime),
+		dateTime: ConvertToUTC(&convertedTime),
 	}, nil
 }
 
@@ -45,7 +45,7 @@ func (rt RelativeTime) GetTime() time.Time {
 }
 
 func (rt *RelativeTime) SetTime(dateTime time.Time) error {
-	convertedTime := convertToUTC(dateTime)
+	convertedTime := ConvertToUTC(&dateTime)
 	err := checkRelativeAndDateTimeCombo(rt.relative, convertedTime)
 	if err != nil {
 		return err
@@ -100,15 +100,17 @@ func checkRelativeAndDateTimeCombo(relative Relative, dateTime time.Time) error 
 	return nil
 }
 
-func convertToUTC(t time.Time) time.Time {
+func ConvertToUTC(t *time.Time) time.Time {
+	newTime := *t
 	if !hasCorrectLocation(t) {
 		_, secondsToOffset := t.Zone()
-		t.UTC().Add(time.Second * time.Duration(secondsToOffset))
+		newTime = t.Add(time.Second * time.Duration(secondsToOffset))
 	}
-	return t
+	return newTime.UTC()
 }
 
-func hasCorrectLocation(t time.Time) bool {
+// Returns 'true' if t is in UTC and 'false' otherwise.
+func hasCorrectLocation(t *time.Time) bool {
 	return t.Location() == time.UTC
 }
 
