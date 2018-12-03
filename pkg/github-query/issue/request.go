@@ -1,6 +1,8 @@
 package issue
 
 import (
+	"github.com/collector-for-GitHub/pkg/github-query/github"
+	"github.com/collector-for-GitHub/pkg/github-query/internal/query"
 	"github.com/collector-for-GitHub/pkg/github-query/types"
 )
 
@@ -29,9 +31,9 @@ type IssuesRequest struct {
 	QueryDateTime types.RelativeTime
 }
 
-//func (issuesRequest *IssuesRequest) GetGitHubRequest() (*request.GitHubRequest, error) {
-//	return request.GetRequestForIssues(issuesRequest)
-//}
+func (issuesRequest *IssuesRequest) GetIssues() ([]github.Issue, error) {
+	return query.GetIssues(*issuesRequest)
+}
 
 func (issuesRequest IssuesRequest) GetTerms() []string {
 	return issuesRequest.Terms
