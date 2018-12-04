@@ -6,27 +6,21 @@ import (
 
 // TODO: clean this up
 const (
-	PRAsString = "additions," + AuthorAsString + ",authorAssociation,baseRef{id,name," + RepoAsString + "},changedFiles,closed,closedAt,comments(first:100){totalCount}," +
-		"createdAt,deletions,id," + LabelsAsString + ",locked,mergeable,merged,mergedAt," +
-		"mergedBy{login},number,permalink," + RepoAsString + ",reviews(first:100){totalCount," +
-		"nodes{" + AuthorAsString + ",createdAt,id,state,url}},state,title,updatedAt,url"
+	PRAsString = "additions," + AuthorAsString + ",authorAssociation,baseRefName,changedFiles,closed,closedAt,comments(first:100){totalCount},createdAt,deletions,id," +
+		LabelsAsString + ",locked,mergeable,merged,mergedAt," + "mergedBy{login},number,permalink," + RepoAsString + ",state,title,updatedAt,url"
 
 	PRAsStringWithLeadIn = "{issueCount,nodes{...on PullRequest{" + PRAsString + "}}}"
 )
 
 type PR struct {
-	Additions         int    `json:"additions"`
-	Author            Author `json:"author"`
-	AuthorAssociation string `json:"authorAssociation"`
-	BaseReference     struct {
-		IdFoo      string `json:"id"`
-		Name       string `json:"name"`
-		Repository Repo   `json:"repository"`
-	} `json:"baseRef"`
-	ChangedFiles int       `json:"changedFiles"`
-	Closed       bool      `json:"closed"`
-	ClosedAt     time.Time `json:"closedAt"`
-	Comments     struct {
+	Additions         int       `json:"additions"`
+	Author            Author    `json:"author"`
+	AuthorAssociation string    `json:"authorAssociation"`
+	BranchName        string    `json:"baseRefName"`
+	ChangedFiles      int       `json:"changedFiles"`
+	Closed            bool      `json:"closed"`
+	ClosedAt          time.Time `json:"closedAt"`
+	Comments          struct {
 		TotalCount int `json:"totalCount"`
 	} `json:"comments"`
 	CreatedAt  time.Time          `json:"createdAt"`
@@ -43,16 +37,7 @@ type PR struct {
 	Number     int    `json:"number"`
 	Permalink  string `json:"permalink"`
 	Repository Repo   `json:"repository"`
-	Reviews    struct {
-		TotalCount int `json:"totalCount"`
-		Review     []struct {
-			Author    Author    `json:"author"`
-			CreatedAt time.Time `json:"createdAt"`
-			Id        string    `json:"id"`
-			State     string    `json:"state"`
-			Url       string    `json:"url"`
-		} `json:"nodes"`
-	} `json:"reviews"`
+	// Reviews ReviewsQueryResults `json:"reviews"` // BUG: appears not to be working for GitHub (even outside this program)
 	State     string    `json:"state"`
 	Title     string    `json:"title"`
 	UpdatedAt time.Time `json:"updatedAt"`
