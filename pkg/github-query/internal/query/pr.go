@@ -1,10 +1,21 @@
 package query
 
-////
-//func (manager *Manager) DoQueryForPRs() (github.GitHubList, error) {
-//	newDoQueryInput, err := manager.getDoQueryInput()
-//	if err != nil {
-//		return nil, err
-//	}
-//	return querydoer.QueryForPRs(*newDoQueryInput)
-//}
+import (
+	"fmt"
+
+	"github.com/collector-for-GitHub/pkg/github-query/github"
+	"github.com/collector-for-GitHub/pkg/github-query/internal/request"
+)
+
+func GetPullRequests(iqr request.PRQueryRequest) ([]github.PR, error) {
+	gitHubRequest, err := request.GetRequestForPullRequest(iqr)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create request: %s", err)
+	}
+
+	results, err := getResults(gitHubRequest)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get results: %s", err)
+	}
+	return results.GetResultsForPRs(), nil
+}
