@@ -35,11 +35,8 @@ func getBase(request *RequestProvider) (string, error) {
 		stateToString((*request).GetState()),
 		searchInToString((*request).GetSearchIn()),
 		sortOrderToString()}, " "), nil
-
-	//return queryString.String(), nil
 }
 
-//
 func requestSourceToString(ownerLogin, repoName string) (string, error) {
 	if ownerLogin == "" {
 		return "", fmt.Errorf("must include an OwnerLogin (the username for a user or org to query)")
@@ -52,7 +49,7 @@ func requestSourceToString(ownerLogin, repoName string) (string, error) {
 	return fmt.Sprintf("repo:\\\\\\\"%v/%v\\\\\\\"", ownerLogin, repoName), nil
 }
 
-//
+// TODO: return error if not a known type
 func objectTypeToString(objectType types.ObjectType) string {
 	switch objectType {
 	case types.Issues:
@@ -65,6 +62,7 @@ func objectTypeToString(objectType types.ObjectType) string {
 }
 
 // TODO: These are likely not correct
+// TODO: return error if not a known type
 func stateToString(state types.State) string {
 	switch state {
 	case types.ClosedIssues:
@@ -86,7 +84,7 @@ func stateToString(state types.State) string {
 	}
 }
 
-//
+// TODO: return error if not a known type
 func searchInToString(searchIn types.SearchIn) string {
 	switch searchIn {
 	case types.Body:
@@ -100,7 +98,7 @@ func searchInToString(searchIn types.SearchIn) string {
 	}
 }
 
-//
+// NOTE: will change when future versions allow for user to specify this
 func sortOrderToString() string {
 	return "sort:created-asc"
 }

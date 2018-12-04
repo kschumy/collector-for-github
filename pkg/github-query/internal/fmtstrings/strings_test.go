@@ -3,7 +3,6 @@ package fmtstrings
 import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-	"sort"
 )
 
 var (
@@ -63,7 +62,6 @@ var _ = Describe("get lowercase, trimmed, unique list with toLowercaseUniqueTrim
 		Context("Without whitespaces", func() {
 			It("return the list", func() {
 				actual := ToLowercaseUniqueTrimmedList([]string{"hello", "world"})
-				sort.Strings(actual)
 				Expect(actual).To(Equal([]string{"hello", "world"}))
 			})
 		})

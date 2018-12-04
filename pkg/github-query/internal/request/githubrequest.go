@@ -5,6 +5,8 @@ import (
 
 	"github.com/collector-for-GitHub/pkg/github-query/internal/fmtstrings"
 	"github.com/collector-for-GitHub/pkg/github-query/types"
+
+	"github.com/kubicorn/kubicorn/pkg/logger"
 )
 
 type GenericRequest interface {
@@ -22,7 +24,7 @@ type IssueQueryRequest interface {
 	GetState() types.IssueState
 }
 
-type PrQueryRequest interface {
+type PRQueryRequest interface {
 	GenericRequest
 	GetState() types.PRState
 	IsMerged() bool
@@ -59,11 +61,13 @@ type gitHubRequest struct {
 }
 
 func GetRequestForIssues(iqr IssueQueryRequest) (*gitHubRequest, error) {
+	// Assigns value to defaults
 	newGitHubRequest, err := getDefaultGitHubRequest(iqr)
 	if err != nil {
 		return nil, err
 	}
 
+	// Assigns value to state
 	if !iqr.GetState().IsValid() {
 		return nil, fmt.Errorf("invalid IssueState for gitHubRequest: %v", iqr.GetState())
 	}
@@ -73,17 +77,19 @@ func GetRequestForIssues(iqr IssueQueryRequest) (*gitHubRequest, error) {
 	}
 	newGitHubRequest.state = state
 
+	// Assigns value to objectType
 	newGitHubRequest.objectType = types.Issues
 
 	return newGitHubRequest, nil
 }
 
-func GetRequestForPullRequest(prqr PrQueryRequest) (*gitHubRequest, error) {
+func GetRequestForPullRequest(prqr PRQueryRequest) (*gitHubRequest, error) {
 	newGitHubRequest, err := getDefaultGitHubRequest(prqr)
 	if err != nil {
 		return nil, err
 	}
 
+	// Assigns value to state
 	if !prqr.GetState().IsValid() {
 		return nil, fmt.Errorf("invalid IssueState for gitHubRequest: %v", prqr.GetState())
 	}
@@ -93,17 +99,19 @@ func GetRequestForPullRequest(prqr PrQueryRequest) (*gitHubRequest, error) {
 	}
 	newGitHubRequest.state = state
 
+	// Assigns value to objectType
 	newGitHubRequest.objectType = types.PRs
+	// Assigns value to merged
 	newGitHubRequest.merged = prqr.IsMerged()
 
 	return newGitHubRequest, nil
 }
 
-// TODO: fix bug with repoName setting to ownerLogin. Race problem?
 // getDefault returns a gitHubRequest with the following fields set if provided a value by qr:
 //		- accessible		(returns error if invalid)
 //		- labels
 // 		- ownerLogin		(returns error if empty or only contains whitespaces)
+// 		- repoName			(returns error if contains whitespaces between characters)
 //		- relativeDateTime	(returns error if invalid)
 //		- searchIn			(returns error if invalid)
 //		- terms
@@ -117,32 +125,37 @@ func getDefaultGitHubRequest(qr GenericRequest) (*gitHubRequest, error) {
 		return nil, err
 	}
 
+	// Assigns value to ownerLogin and relativeDateTime
 	newGitHubRequest := gitHubRequest{
 		ownerLogin:       ownerLogin,
 		relativeDateTime: *newRelativeTime,
 	}
 
-	//time.Sleep(5 * time.Second)
-	//repoName, err := formatRepoIfNoError(ir.GetRepoName())
-	//if err != nil {
-	//	return nil, err
-	//}
-	//newGitHubRequest.repoName = *repoName
-	//fmt.Printf("3. %+v\n", newGitHubRequest)
+	// Assigns value to repoName
+	repoName, err := formatRepoIfNoError(qr.GetRepoName())
+	if err != nil {
+		return nil, err
+	}
+	newGitHubRequest.repoName = repoName
 
-	newGitHubRequest.terms = fmtstrings.ToLowercaseUniqueTrimmedList(qr.GetTerms())
-	newGitHubRequest.labels = fmtstrings.ToLowercaseUniqueTrimmedList(qr.GetLabels())
-
+	// Assigns value to searchIn
 	if !qr.GetSearchIn().IsValid() {
 		return nil, fmt.Errorf("invalid SearchIn for gitHubRequest: %v", qr.GetSearchIn())
 	}
 	newGitHubRequest.searchIn = qr.GetSearchIn()
 
+	// Assigns value to accessible
 	if !qr.GetAccessible().IsValid() {
 		return nil, fmt.Errorf("invalid Accessible for gitHubRequest: %v", qr.GetAccessible())
 	}
 	newGitHubRequest.accessible = qr.GetAccessible()
 
+	// Assigns value to terms
+	newGitHubRequest.terms = fmtstrings.ToLowercaseUniqueTrimmedList(qr.GetTerms())
+	// Assigns value to labels
+	newGitHubRequest.labels = fmtstrings.ToLowercaseUniqueTrimmedList(qr.GetLabels())
+
+	logger.Debug("GitHub Request: %+v", newGitHubRequest)
 	return &newGitHubRequest, nil
 }
 
@@ -188,16 +201,6 @@ func (r gitHubRequest) GetLabelAtIndex(index int) (string, error) {
 	}
 	return r.labels[index], nil
 }
-
-//func (r gitHubRequest) initializeWithRelativeDateTime() (*gitHubRequest, error) {
-//	if r.ownerLogin == "" {
-//		return nil, fmt.Errorf("cannot initialize with invalid request")
-//	}
-//
-//	// BUG with types.GetCopyOrDefault(r)
-//	copyOfRelativeTime, err := types.GetCopyOrDefault(r.GetRelativeTime())
-//	return &gitHubRequest{relativeDateTime: copyOfRelativeTime}, err
-//}
 
 func formatOwnerIfNoError(ownerLogin string) (string, error) {
 	login, err := fmtstrings.GetTrimmedOrErrorIfRemainingWhiteSpaces(ownerLogin)

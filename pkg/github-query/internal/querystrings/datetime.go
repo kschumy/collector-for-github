@@ -34,5 +34,5 @@ func relativeTimeDateToString(r types.RelativeTime) string {
 
 //
 func formatTime(t *time.Time) string {
-	return t.Format(time.RFC3339)
+	return types.ConvertToUTC(t).Format(time.RFC3339)
 }

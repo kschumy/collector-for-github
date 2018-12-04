@@ -1,16 +1,19 @@
 package issue
 
 import (
+	"github.com/collector-for-GitHub/pkg/github-query/github"
+	"github.com/collector-for-GitHub/pkg/github-query/internal/query"
 	"github.com/collector-for-GitHub/pkg/github-query/types"
 )
 
 type IssuesRequest struct {
-	// Words and/or phrases to gh for. Optional.
+	// Words to query for. Optional.
+	// Each term must be only one word and contain no extra whitespaces.
 	Terms []string
-	// Valid labels for OwnerLogin or RepoName. Optional.
-	// query returns results that match any of the labels and are not required to match all of the labels.
+	// Valid labels for org or repo being queries. Optional.
+	// Results will match any of these labels, not all of them.
 	Labels []string
-	// Where gh will search for Terms. Optional.
+	// Where query will search for Terms. Optional.
 	// Options: Body, Comments, Title, or AnyLocation. Default is AnyLocation.
 	SearchIn types.SearchIn
 	// query for issues based on open/closed state. Optional.
@@ -29,9 +32,9 @@ type IssuesRequest struct {
 	QueryDateTime types.RelativeTime
 }
 
-//func (issuesRequest *IssuesRequest) GetGitHubRequest() (*request.GitHubRequest, error) {
-//	return request.GetRequestForIssues(issuesRequest)
-//}
+func (issuesRequest *IssuesRequest) GetIssues() ([]github.Issue, error) {
+	return query.GetIssues(*issuesRequest)
+}
 
 func (issuesRequest IssuesRequest) GetTerms() []string {
 	return issuesRequest.Terms

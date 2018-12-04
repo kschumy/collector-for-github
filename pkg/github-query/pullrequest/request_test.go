@@ -1,32 +1,30 @@
-package issue
+package pullrequest
 
 import (
-	"github.com/collector-for-GitHub/pkg/github-query/issue"
+	. "github.com/collector-for-GitHub/pkg/github-query/types"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
-
-	. "github.com/collector-for-GitHub/pkg/github-query/types"
 )
 
 // TESTS: Query
 var _ = Describe("Query", func() {
 	var (
-		testQueryAWS = issue.IssuesRequest{
+		testQueryAWS = PRsRequest{
 			Terms:      []string{"aws", "eks"},
 			Labels:     []string{"sig/aws", "area/platform/aws", "area/platform/eks"},
 			SearchIn:   Title,
-			State:      Open,
+			State:      Approved,
 			OwnerLogin: "kubernetes",
-			//RepoName: "foobar-repo",
+			RepoName:   "test-infra",
 		}
 	)
 
-	// TESTS: basic gh
+	// TODO: this test is terrible for obvious reasons and one with fake issues from an achieved org/repo.
 	Context("When initialized without any values", func() {
 		It("should default with GitHubObjectType of AnyEvent", func() {
-			results, err := testQueryAWS.GetIssues()
-			Expect(len(results)).To(Equal(163))
+			results, err := testQueryAWS.GetPullRequests()
 			Expect(err).NotTo(HaveOccurred())
+			Expect(len(results)).To(Equal(92))
 		})
 	})
 })

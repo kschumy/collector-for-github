@@ -4,13 +4,11 @@ import "time"
 
 const LabelsAsString = "labels(first:100){totalCount,nodes{id,name,updatedAt}}"
 
-//
 type LabelsQueryResults struct {
 	TotalCount int      `json:"totalCount"`
 	Labels     []*Label `json:"nodes"`
 }
 
-//
 type Label struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`

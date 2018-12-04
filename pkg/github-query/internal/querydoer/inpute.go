@@ -6,14 +6,6 @@ import (
 	"github.com/collector-for-GitHub/pkg/github-query/types"
 )
 
-//type RelativeTimeProvider interface {
-//	GetRelativeTime() types.RelativeTime
-//}
-
-//type QueryStringGenerator interface {
-//	GenerateQueryString(time.Time) (string, error)
-//}
-
 type DoQueryInput struct {
 	QueryFactory      func(time.Time) (string, error)
 	RelativeTimeStart types.RelativeTime

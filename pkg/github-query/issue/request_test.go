@@ -6,7 +6,6 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-// TESTS: Query
 var _ = Describe("Query", func() {
 	var (
 		testQueryAWS = IssuesRequest{
@@ -15,15 +14,15 @@ var _ = Describe("Query", func() {
 			SearchIn:   Title,
 			State:      Open,
 			OwnerLogin: "kubernetes",
-			//RepoName: "foobar-repo",
+			//RepoName: "test-infra",
 		}
 	)
 
-	// TESTS: basic gh
+	// TODO: this test is terrible for obvious reasons and one with fake issues from an achieved org/repo.
 	Context("When initialized without any values", func() {
 		It("should default with GitHubObjectType of AnyEvent", func() {
-			_, err := testQueryAWS.GetIssues()
-			//Expect(len(results)).To(Equal(163))
+			results, err := testQueryAWS.GetIssues()
+			Expect(len(results)).To(Equal(161))
 			Expect(err).NotTo(HaveOccurred())
 		})
 	})

@@ -7,14 +7,14 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("format datetime", func() {
-	var testTimeUTC = time.Date(2018, 2, 5, 9, 0, 0, 0, time.UTC)
-	var testTimeUTCString = "2018-02-05T09:00:00Z"
+var testTimeUTC = time.Date(2018, 2, 5, 9, 0, 0, 0, time.UTC)
+var testTimeUTCString = "2018-02-05T09:00:00Z"
 
+var _ = Describe("format datetime", func() {
 	Context("When provided datetime in UTC", func() {
 		It("returns the datetime as a string in the correct format", func() {
-			actual := formatTime(&testTimeUTC)
-			Expect(actual).To(Equal(testTimeUTCString))
+			expectedTime := formatTime(&testTimeUTC)
+			Expect(expectedTime).To(Equal(testTimeUTCString))
 		})
 	})
 
@@ -27,13 +27,13 @@ var _ = Describe("format datetime", func() {
 		})
 
 		It("returns the UTC-converted datetime as a string in the correct format", func() {
-			actual := formatTime(&testTimePST)
-			Expect(actual).To(Equal(testTimeUTCString))
+			expectedTime := formatTime(&testTimePST)
+			Expect(expectedTime).To(Equal(testTimeUTCString))
 		})
 
 		It("does not modify the original datetime", func() {
 			originalTime := testTimePST
-			formatTime(&testTimePST)
+			_ = formatTime(&testTimePST)
 			Expect(originalTime).To(Equal(testTimePST))
 			Expect(timeLocation).To(Equal(testTimePST.Location()))
 		})

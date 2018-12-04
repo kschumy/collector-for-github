@@ -13,14 +13,3 @@ type Assignee struct {
 	Name    string `json:"name"`
 	Company string `json:"company"`
 }
-
-//
-//func (assignees Assignees) GetLogins() []string {
-//	fmt.Printf("%+v", assignees)
-//	assigneeNames := []string{}
-//	for _, assignee := range assignees.AssigneeList {
-//		assigneeNames = append(assigneeNames, assignee.Name)
-//	}
-//	return assigneeNames
-//
-//}

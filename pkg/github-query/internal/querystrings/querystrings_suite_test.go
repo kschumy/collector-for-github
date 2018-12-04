@@ -1,4 +1,4 @@
-package pullrequest
+package querystrings_test
 
 import (
 	"testing"
@@ -7,7 +7,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-func TestRequest(t *testing.T) {
+func TestQuerystrings(t *testing.T) {
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "Request Suite")
+	RunSpecs(t, "Querystrings Suite")
 }
