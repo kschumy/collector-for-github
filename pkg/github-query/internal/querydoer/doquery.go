@@ -77,7 +77,6 @@ func (manager *doQueryManager) getResultsFromGitHub() (json.RawMessage, int, err
 	if err != nil {
 		return nil, 0, fmt.Errorf("error getting string for query: %#v", err)
 	}
-	logger.Debug(bodyString)
 
 	req, err := http.NewRequest("POST", url, strings.NewReader(bodyString))
 	if err != nil {
@@ -140,7 +139,6 @@ func (manager *doQueryManager) addToResults(message *json.RawMessage) (int, erro
 	case types.PRs:
 		var newList []github.PR
 		err := json.Unmarshal(*message, &newList)
-		logger.Debug("Message: %#v", message)
 		if err != nil {
 			return 0, fmt.Errorf("error while unmarshalling PRs: %s", err)
 		}

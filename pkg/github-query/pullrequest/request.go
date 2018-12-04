@@ -34,6 +34,8 @@ type PRsRequest struct {
 	Merged bool
 }
 
+// BUG: getting over about 200k results/hour will results in the user exceeding the rate limit.
+// TODO: implement a way to return results if this error is encountered.
 func (prRequest *PRsRequest) GetPullRequests() ([]github.PR, error) {
 	return query.GetPullRequests(prRequest)
 }

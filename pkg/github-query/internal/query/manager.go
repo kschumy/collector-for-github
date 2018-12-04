@@ -24,6 +24,8 @@ func initializeManager(request *RequestProvider) (*Manager, error) {
 	}, nil
 }
 
+// BUG: getting over about 200k results/hour will results in the user exceeding the rate limit.
+// TODO: implement a way to return results if this error is encountered.
 func getResults(request RequestProvider) (*results, error) {
 	manager, err := initializeManager(&request)
 	if err != nil {

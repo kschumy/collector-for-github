@@ -32,6 +32,7 @@ type IssuesRequest struct {
 	QueryDateTime types.RelativeTime
 }
 
+// BUG: getting over about 200k results/hour will results in the user exceeding the rate limit.
 func (issuesRequest *IssuesRequest) GetIssues() ([]github.Issue, error) {
 	return query.GetIssues(*issuesRequest)
 }

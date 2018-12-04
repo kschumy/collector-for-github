@@ -31,6 +31,7 @@ func (results *results) GetResultsForPRs() []github.PR {
 	return results.prs
 }
 
+// append add newResults to currResults and updates the appropriate last created time value if needed.
 func (currResults *results) append(newResults *resultsInterface) {
 	if newResults == nil {
 		return
