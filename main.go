@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/collector-for-GitHub/internal/awsresource"
 	"github.com/collector-for-GitHub/internal/post"
 	"github.com/collector-for-GitHub/query"
 	"github.com/kubicorn/kubicorn/pkg/logger"
@@ -17,23 +15,29 @@ type Response struct {
 }
 
 func main() {
-	lambda.Start(manageProgram)
+	resp, err := manageProgram()
+
+	fmt.Printf("Response: %#v", resp)
+	fmt.Printf("Error: %#v", err)
+	//lambda.Start(manageProgram)
 }
 
 func manageProgram() (Response, error) {
 	logger.Level = 3
-	configFile, err := awsresource.GetYaml()
-	if err != nil {
-		return getStandardErrorResponse("config", err)
-	}
+	//configFile, err := awsresource.GetYaml()
+	//if err != nil {
+	//	return getStandardErrorResponse("config", err)
+	//}
 
-	issues, err := query.QueryForIssues(configFile.GetUpdatedTime())
+	issues, err := query.QueryForIssues( time.Now().UTC().AddDate(0, -1, 0))
+
+	//issues, err := query.QueryForIssues(configFile.GetUpdatedTime())
 	if err != nil {
 		return getStandardErrorResponse("query", err)
 	}
 
-	err = post.PostAllIssues(issues, configFile)
-	awsresource.SaveYaml(configFile)
+	err = post.PostAllIssues(issues)//, configFile)
+	//awsresource.SaveYaml(configFile)
 	if err != nil {
 		return getStandardErrorResponse("posting", err)
 	}
@@ -42,7 +46,8 @@ func manageProgram() (Response, error) {
 		Message: fmt.Sprintf(
 			"Finished request from %#v, with last recorded time %#v",
 			time.Now().String(),
-			configFile.GetUpdatedTime().String(),
+			"hi",
+			///configFile.GetUpdatedTime().String(),
 		),
 		Ok: true,
 	}, nil

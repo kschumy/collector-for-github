@@ -4,18 +4,16 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
-	"github.com/collector-for-GitHub/internal/awsresource"
 	"github.com/collector-for-GitHub/pkg/github-query/github"
 	"github.com/kubicorn/kubicorn/pkg/logger"
 )
 
 const secondsToSleep = 4
 
-var url = "https://api.github.com/teams/" + os.Getenv("BOARD_ID") + "/discussions"
+var url = //TODO: replace with api url for chime //"https://api.github.com/teams/" + os.Getenv("BOARD_ID") + "/discussions"
 
 type discussionPost struct {
 	Author      string    `json:"author"`
@@ -28,7 +26,7 @@ type discussionPost struct {
 }
 
 //
-func PostAllIssues(issues []github.Issue, configFile *awsresource.Config) error {
+func PostAllIssues(issues []github.Issue) error {//, configFile *awsresource.Config) error {
 	for i, issue := range issues {
 		if i == 20 {
 			return fmt.Errorf("timedout before finishing. Created %v out of %v. Lambda will re-run if it can", i, len(issues))
@@ -40,28 +38,30 @@ func PostAllIssues(issues []github.Issue, configFile *awsresource.Config) error 
 		}
 
 		logger.Info("%v Created post (repo %q, #\"%v) from %s", i, issue.GetRepoName(), issue.GetNumber(), issue.GetDateCreated().String())
-		configFile.SetUpdatedTime(issue.GetDateCreated())
+		//configFile.SetUpdatedTime(issue.GetDateCreated())
 		time.Sleep(secondsToSleep * time.Second) // delay is due to GitHub's rate limits
 	}
 	return nil
 }
 
 func createPost(info discussionPost) error {
-	payload := strings.NewReader(info.getHTTPPRequestBody())
+	payload := strings.NewReader(fmt.Sprintf( "{\"Content\":\"%s\"}",info.getHTTPPRequestBody()))
 
 	req, err := http.NewRequest("POST", url, payload)
 	if err != nil {
 		return fmt.Errorf("error with creating post: %#v", err)
 	}
-	req.Header.Add("Accept", "application/vnd.github.echo-preview+json")
-	req.Header.Add("cache-control", "no-cache")
-	req.Header.Add("Authorization", "bearer "+os.Getenv("GITHUB_TOKEN"))
+	req.Header.Add("Accept", ":application/json")
+
+	//req.Header.Add("Accept", "application/vnd.github.echo-preview+json")
+	//req.Header.Add("cache-control", "no-cache")
+	//req.Header.Add("Authorization", "bearer "+os.Getenv("GITHUB_TOKEN"))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("error with creating post: %#v", err)
 	}
-	if resp.StatusCode != 201 {
+	if resp.StatusCode != 200 {
 		body, err := ioutil.ReadAll(resp.Body)
 		errorMsg := fmt.Sprintf("when creating a post, got status code %v instead of 201", resp.StatusCode)
 		if err != nil {
@@ -89,16 +89,16 @@ func getObjectInfo(issue github.Issue) discussionPost {
 }
 
 func (post discussionPost) getHTTPPRequestBody() string {
-	return fmt.Sprintf("{\"title\": \"%s, #%v\",\"body\": \"%v\",\"assignees\": [],\"labels\": []}",
-		post.RepoName,
-		post.Number,
-		fmt.Sprintf(
+	//return fmt.Sprintf("{\"title\": \"%s, #%v\",\"body\": \"%v\",\"assignees\": [],\"labels\": []}",
+	//	post.RepoName,
+	//	post.Number,
+	return	fmt.Sprintf(
 			"- **Title**: %s\\n- **Repo**: %s\\n- **User**: %s\\n- **Created**: %s\\n- **Labels**: %s\\n- **URL**: %s",
 			post.Title,
 			post.RepoName,
 			post.Author,
 			post.DateCreated,
 			post.Labels,
-			post.Url),
-	)
+			post.Url)
+	//)
 }
