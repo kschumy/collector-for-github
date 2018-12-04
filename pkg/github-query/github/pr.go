@@ -8,7 +8,7 @@ import (
 const (
 	PRAsString = "additions," + AuthorAsString + ",authorAssociation,baseRef{id,name," + RepoAsString + "},changedFiles,closed,closedAt,comments(first:100){totalCount}," +
 		"createdAt,deletions,id," + LabelsAsString + ",locked,mergeable,merged,mergedAt," +
-		"mergedBy{login},number,permalink," + RepoAsString + "reviews(first:100){totalCount," +
+		"mergedBy{login},number,permalink," + RepoAsString + ",reviews(first:100){totalCount," +
 		"nodes{" + AuthorAsString + ",createdAt,id,state,url}},state,title,updatedAt,url"
 
 	PRAsStringWithLeadIn = "{issueCount,nodes{...on PullRequest{" + PRAsString + "}}}"
@@ -45,7 +45,7 @@ type PR struct {
 	Repository Repo   `json:"repository"`
 	Reviews    struct {
 		TotalCount int `json:"totalCount"`
-		Review     struct {
+		Review     []struct {
 			Author    Author    `json:"author"`
 			CreatedAt time.Time `json:"createdAt"`
 			Id        string    `json:"id"`
