@@ -1,4 +1,4 @@
-package issue
+package pullrequest
 
 import (
 	. "github.com/collector-for-GitHub/pkg/github-query/types"
@@ -13,7 +13,7 @@ var _ = Describe("Query", func() {
 			Terms:      []string{"aws", "eks"},
 			Labels:     []string{"sig/aws", "area/platform/aws", "area/platform/eks"},
 			SearchIn:   Title,
-			//State:      Merge,
+			State:      Approved,
 			OwnerLogin: "kubernetes",
 			RepoName:   "test-infra",
 		}
@@ -23,8 +23,8 @@ var _ = Describe("Query", func() {
 	Context("When initialized without any values", func() {
 		It("should default with GitHubObjectType of AnyEvent", func() {
 			results, err := testQueryAWS.GetPullRequests()
-			Expect(len(results)).To(Equal(161))
 			Expect(err).NotTo(HaveOccurred())
+			Expect(len(results)).To(Equal(92))
 		})
 	})
 })
