@@ -7,12 +7,13 @@ import (
 )
 
 type IssuesRequest struct {
-	// Words and/or phrases to gh for. Optional.
+	// Words to query for. Optional.
+	// Each term must be only one word and contain no extra whitespaces.
 	Terms []string
-	// Valid labels for OwnerLogin or RepoName. Optional.
-	// query returns results that match any of the labels and are not required to match all of the labels.
+	// Valid labels for org or repo being queries. Optional.
+	// Results will match any of these labels, not all of them.
 	Labels []string
-	// Where gh will search for Terms. Optional.
+	// Where query will search for Terms. Optional.
 	// Options: Body, Comments, Title, or AnyLocation. Default is AnyLocation.
 	SearchIn types.SearchIn
 	// query for issues based on open/closed state. Optional.
