@@ -6,12 +6,12 @@ import (
 	"strings"
 	"time"
 
-	. "github.com/collector-for-GitHub/pkg/github-query/github"
+	"github.com/collector-for-GitHub/pkg/github-query/github"
 	"github.com/collector-for-GitHub/pkg/github-query/issue"
-	. "github.com/collector-for-GitHub/pkg/github-query/types"
+	"github.com/collector-for-GitHub/pkg/github-query/types"
 )
 
-func main() {
+func PrintResults() {
 	currTime := time.Now()
 	request, err := getRequest(currTime)
 	if err != nil {
@@ -24,7 +24,7 @@ func main() {
 	}
 }
 
-func writeResults(request *issue.IssuesRequest, results []Issue) error {
+func writeResults(request *issue.IssuesRequest, results []github.Issue) error {
 	requestTime := request.GetRelativeTime().GetTime().Local()
 	file, err := os.Create(fmt.Sprintf("results/%d-%02d-%02d-%02d-%02d.txt", requestTime.Year(), requestTime.Month(), requestTime.Day(), requestTime.Minute(), requestTime.Second()))
 	if err != nil {
@@ -49,7 +49,7 @@ func writeResults(request *issue.IssuesRequest, results []Issue) error {
 }
 
 func getRequest(currTime time.Time) (*issue.IssuesRequest, error) {
-	relativeTime, err := NewRelativeTime(AfterDateTime, currTime.UTC().AddDate(0, -3, 0))
+	relativeTime, err := types.NewRelativeTime(types.AfterDateTime, currTime.UTC().AddDate(0, -3, 0))
 	if err != nil {
 		return nil, err
 	}
@@ -57,8 +57,8 @@ func getRequest(currTime time.Time) (*issue.IssuesRequest, error) {
 	return &issue.IssuesRequest{
 		Terms:         []string{"aws", "eks"},
 		Labels:        []string{"sig/aws", "area/platform/aws", "area/platform/eks"},
-		SearchIn:      Title,
-		State:         Open,
+		SearchIn:      types.Title,
+		State:         types.Open,
 		OwnerLogin:    "kubernetes",
 		QueryDateTime: *relativeTime,
 	}, nil
