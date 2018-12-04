@@ -27,6 +27,4 @@ func addLabelToLabelString(labelToInclude string, existingLabels []string) strin
 	}
 	between := fmtstrings.GetInQuotes(" -label:")
 	return strings.Join([]string{newLabel, fmtstrings.GetInQuotesWithPrefix(" -label:", strings.Join(existingLabels, between))}, "")
-
-	//return strings.Join([]string{newLabel, " -label:", QuoteMark, strings.Join(existingLabels, between), QuoteMark}, "")
 }
