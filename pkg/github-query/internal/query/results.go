@@ -1,8 +1,9 @@
 package query
 
 import (
-	"github.com/collector-for-GitHub/pkg/github-query/github"
 	"time"
+
+	"github.com/collector-for-GitHub/pkg/github-query/github"
 )
 
 //TODO: test this!
