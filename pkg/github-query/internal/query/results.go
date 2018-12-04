@@ -5,9 +5,10 @@ import (
 	"time"
 )
 
+//TODO: test this!
 type resultsInterface interface {
-	GetIssues() []github.Issue
-	GetPRs() []github.PR
+	GetResultsForIssues() []github.Issue
+	GetResultsForPRs() []github.PR
 
 	GetLastCreatedIssueTime() *time.Time
 	GetLastCreatedPRTime() *time.Time
@@ -21,11 +22,11 @@ type results struct {
 	lastCreatedPR    *time.Time
 }
 
-func (results *results) GetIssues() []github.Issue {
+func (results *results) GetResultsForIssues() []github.Issue {
 	return results.issues
 }
 
-func (results *results) GetPRs() []github.PR {
+func (results *results) GetResultsForPRs() []github.PR {
 	return results.prs
 }
 
@@ -33,21 +34,21 @@ func (currResults *results) append(newResults *resultsInterface) {
 	if newResults == nil {
 		return
 	}
-	if len((*newResults).GetIssues()) > 0 {
+	if len((*newResults).GetResultsForIssues()) > 0 {
 		currLastCreatedIssueTime := currResults.GetLastCreatedIssueTime()
 		newResultsLastCreatedIssueTime := (*newResults).GetLastCreatedIssueTime()
 		if currLastCreatedIssueTime == nil || newResultsLastCreatedIssueTime.After(*currLastCreatedIssueTime) {
 			currResults.lastCreatedIssue = newResultsLastCreatedIssueTime
 		}
-		currResults.issues = append(currResults.issues, (*newResults).GetIssues()...)
+		currResults.issues = append(currResults.issues, (*newResults).GetResultsForIssues()...)
 	}
-	if len((*newResults).GetPRs()) > 0 {
+	if len((*newResults).GetResultsForPRs()) > 0 {
 		currLastCreatedPRTime := currResults.GetLastCreatedPRTime()
 		newResultsLastCreatedPRTime := (*newResults).GetLastCreatedPRTime()
 		if currLastCreatedPRTime == nil || newResultsLastCreatedPRTime.After(*currLastCreatedPRTime) {
 			currResults.lastCreatedPR = newResultsLastCreatedPRTime
 		}
-		currResults.prs = append(currResults.prs, (*newResults).GetPRs()...)
+		currResults.prs = append(currResults.prs, (*newResults).GetResultsForPRs()...)
 	}
 }
 
