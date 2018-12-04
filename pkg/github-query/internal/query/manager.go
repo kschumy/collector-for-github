@@ -24,14 +24,6 @@ func initializeManager(request *RequestProvider) (*Manager, error) {
 	}, nil
 }
 
-//func getIssues(request *RequestProvider) ([]github.Issue, error) {
-//	results, err := getResults(request)
-//	if err != nil {
-//		return nil, fmt.Errorf("failed to get results: %s", err)
-//	}
-//	return results.GetIssues(), nil
-//}
-
 func getResults(request RequestProvider) (*results, error) {
 	manager, err := initializeManager(&request)
 	if err != nil {
@@ -46,7 +38,7 @@ func getResults(request RequestProvider) (*results, error) {
 	}
 	results.append(&newResults)
 
-	///    / idk what's up with this
+	// TODO: what's up with this? It was in an earlier version but is it still needed?
 	//	// If there are no labels or the query was for everything, there are no more results to be collected.
 	//	if len(r.QueryLabels) == 0 || len(r.QueryTerms) == 0 {
 	//		return queryResults, nil
@@ -71,7 +63,6 @@ func getResults(request RequestProvider) (*results, error) {
 	return &results, nil
 }
 
-//
 func (manager *Manager) doQueryForIssues() (resultsInterface, error) {
 	queryStringFunc, err := manager.queryStrings.BuildQueryStringFactory(manager.request)
 	if err != nil {

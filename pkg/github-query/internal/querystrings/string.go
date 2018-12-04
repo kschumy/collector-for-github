@@ -19,7 +19,6 @@ type QueryStrings struct {
 }
 
 type RequestProvider interface {
-	//types.RelativeTimeProvider
 	GetTerms() []string
 	GetLabels() []string
 	GetObjectType() types.ObjectType
@@ -32,7 +31,7 @@ type RequestProvider interface {
 	GetLabelAtIndex(int) (string, error)
 }
 
-// InitializeToDefault returns an instance of QueryStrings, which is defailted to separate terms by
+// InitializeToDefault returns an instance of QueryStrings, which is defaulted to separate terms by
 // "OR", and it does not set labels.
 func InitializeToDefault(input *RequestProvider) (*QueryStrings, error) {
 	qs := QueryStrings{}
@@ -59,26 +58,11 @@ func (qs *QueryStrings) GetString() (string, error) {
 	), nil
 }
 
-//
-func (queryStr *QueryStrings) isInitialized() bool {
-	return queryStr.base != "" && queryStr.querySchema != "" && queryStr.relativeTime != ""
-}
-
-// TODO: make less ugly and inefficient
+// TODO: test this!! There might be an extra space being added here
 func (qs *QueryStrings) BuildQueryStringFactory(input *RequestProvider) (func(time.Time) (string, error), error) {
 	if !qs.isInitialized() {
 		return nil, fmt.Errorf("cannot get with blank date on uninitilized QueryStrings")
 	}
-	//var rdt types.RelativeTime
-	//relativeTime, err := types.GetCopyOrDefault((*input).GetRelativeTime())
-	//if err != nil {
-	//	return nil, fmt.Errorf("error with date while building string factory")
-	//}
-	//if !rt.GetTime().IsZero() {
-	//	rdt = types.GetCopyOrDefault(input.GetRelativeTime())
-	//} else {
-	//	rdt = *types.InitializeWithDefault()
-	//}
 	relativeTime := (*input).GetRelativeTime()
 
 	return func(newDate time.Time) (string, error) {
@@ -93,4 +77,8 @@ func (qs *QueryStrings) BuildQueryStringFactory(input *RequestProvider) (func(ti
 			qs.querySchema), nil
 	}, nil
 
+}
+
+func (queryStr *QueryStrings) isInitialized() bool {
+	return queryStr.base != "" && queryStr.querySchema != "" && queryStr.relativeTime != ""
 }
