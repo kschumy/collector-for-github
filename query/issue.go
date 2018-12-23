@@ -1,9 +1,9 @@
 package query
 
 import (
-	"github.com/collector-for-GitHub/pkg/github-query/github"
-	"github.com/collector-for-GitHub/pkg/github-query/issue"
-	"github.com/collector-for-GitHub/pkg/github-query/types"
+	"github.com/collector-for-github/pkg/github-query/github"
+	"github.com/collector-for-github/pkg/github-query/issue"
+	"github.com/collector-for-github/pkg/github-query/types"
 	"github.com/kubicorn/kubicorn/pkg/logger"
 	"time"
 )

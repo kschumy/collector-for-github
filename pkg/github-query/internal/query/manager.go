@@ -2,8 +2,8 @@ package query
 
 import (
 	"fmt"
-	"github.com/collector-for-GitHub/pkg/github-query/internal/querydoer"
-	. "github.com/collector-for-GitHub/pkg/github-query/internal/querystrings"
+	"github.com/collector-for-github/pkg/github-query/internal/querydoer"
+	. "github.com/collector-for-github/pkg/github-query/internal/querystrings"
 )
 
 type Manager struct {

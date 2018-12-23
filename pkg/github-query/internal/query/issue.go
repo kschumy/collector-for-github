@@ -3,8 +3,8 @@ package query
 import (
 	"fmt"
 
-	"github.com/collector-for-GitHub/pkg/github-query/github"
-	"github.com/collector-for-GitHub/pkg/github-query/internal/request"
+	"github.com/collector-for-github/pkg/github-query/github"
+	"github.com/collector-for-github/pkg/github-query/internal/request"
 )
 
 func GetIssues(iqr request.IssueQueryRequest) ([]github.Issue, error) {
