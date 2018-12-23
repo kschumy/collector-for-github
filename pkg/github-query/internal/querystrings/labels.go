@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/collector-for-GitHub/pkg/github-query/internal/fmtstrings"
+	"github.com/collector-for-github/pkg/github-query/internal/fmtstrings"
 )
 
 func (qs *QueryStrings) AddLabel(input RequestProvider, index int) error {

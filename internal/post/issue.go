@@ -8,8 +8,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/collector-for-GitHub/internal/awsresource"
-	"github.com/collector-for-GitHub/pkg/github-query/github"
+	"github.com/collector-for-github/internal/awsresource"
+	"github.com/collector-for-github/pkg/github-query/github"
 	"github.com/kubicorn/kubicorn/pkg/logger"
 )
 

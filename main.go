@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/collector-for-GitHub/internal/awsresource"
-	"github.com/collector-for-GitHub/internal/post"
-	"github.com/collector-for-GitHub/query"
+	"github.com/collector-for-github/internal/awsresource"
+	"github.com/collector-for-github/internal/post"
+	"github.com/collector-for-github/query"
 	"github.com/kubicorn/kubicorn/pkg/logger"
 )
 
@@ -17,10 +17,10 @@ type Response struct {
 }
 
 func main() {
-	lambda.Start(manageProgram)
+	lambda.Start(queryAndPost)
 }
 
-func manageProgram() (Response, error) {
+func queryAndPost() (Response, error) {
 	logger.Level = 3
 	configFile, err := awsresource.GetYaml()
 	if err != nil {

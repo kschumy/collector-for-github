@@ -1,9 +1,9 @@
 package pullrequest
 
 import (
-	"github.com/collector-for-GitHub/pkg/github-query/github"
-	"github.com/collector-for-GitHub/pkg/github-query/internal/query"
-	"github.com/collector-for-GitHub/pkg/github-query/types"
+	"github.com/collector-for-github/pkg/github-query/github"
+	"github.com/collector-for-github/pkg/github-query/internal/query"
+	"github.com/collector-for-github/pkg/github-query/types"
 )
 
 type PRsRequest struct {
@@ -17,7 +17,7 @@ type PRsRequest struct {
 	// Options: Body, Comments, Title, or AnyLocation. Default is AnyLocation.
 	SearchIn types.SearchIn
 	// query for pull requests based on open/closed state. Optional.
-	// Options: TODO
+	// TODO: options
 	State types.PRState
 	// Login for repo's owner or org. ❗ REQUIRED ❗
 	OwnerLogin string
