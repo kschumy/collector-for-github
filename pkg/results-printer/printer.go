@@ -2,6 +2,7 @@ package results_printer
 
 import (
 	"fmt"
+	"go/build"
 	"os"
 	"strings"
 	"time"
@@ -26,7 +27,12 @@ func PrintResults() {
 
 func writeResults(request *issue.IssuesRequest, results []github.Issue) error {
 	requestTime := request.GetRelativeTime().GetTime().Local()
-	file, err := os.Create(fmt.Sprintf("results/%d-%02d-%02d-%02d-%02d.txt", requestTime.Year(), requestTime.Month(), requestTime.Day(), requestTime.Minute(), requestTime.Second()))
+	gopath := os.Getenv("GOPATH")
+	if gopath == "" {
+		gopath = build.Default.GOPATH
+	}
+	file, err := os.Create(fmt.Sprintf("%s/src/github.com/collector-for-GitHub/pkg/results-printer/results/%d-%02d-%02d-%02d-%02d.txt", gopath, requestTime.Year(), requestTime.Month(), requestTime.Day(), requestTime.Minute(), requestTime.Second()))
+	time.Sleep(10 * time.Second)
 	if err != nil {
 		return err
 	}
@@ -49,14 +55,14 @@ func writeResults(request *issue.IssuesRequest, results []github.Issue) error {
 }
 
 func getRequest(currTime time.Time) (*issue.IssuesRequest, error) {
-	relativeTime, err := types.NewRelativeTime(types.AfterDateTime, currTime.UTC().AddDate(0, -3, 0))
+	relativeTime, err := types.NewRelativeTime(types.AfterDateTime, currTime.UTC().AddDate(-1, 0, 0))
 	if err != nil {
 		return nil, err
 	}
 
 	return &issue.IssuesRequest{
-		Terms:         []string{"aws", "eks"},
-		Labels:        []string{"sig/aws", "area/platform/aws", "area/platform/eks"},
+		Terms:         []string{"aws"},
+		Labels:        []string{"sig/aws", "area/platform/aws"},
 		SearchIn:      types.Title,
 		State:         types.Open,
 		OwnerLogin:    "kubernetes",
