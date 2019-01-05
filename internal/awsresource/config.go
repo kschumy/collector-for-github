@@ -11,5 +11,7 @@ func (c *Config) GetUpdatedTime() time.Time {
 }
 
 func (c *Config) SetUpdatedTime(newUpdatedTime time.Time) {
-	c.Updated = newUpdatedTime
+	if newUpdatedTime.After(c.GetUpdatedTime()) {
+		c.Updated = newUpdatedTime
+	}
 }
