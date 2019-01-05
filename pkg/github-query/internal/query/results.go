@@ -19,8 +19,8 @@ type results struct {
 	issues []github.Issue
 	prs    []github.PR
 
-	lastCreatedIssue *time.Time
-	lastCreatedPR    *time.Time
+	lastCreatedIssueTime *time.Time
+	lastCreatedPRTime    *time.Time
 }
 
 func (results *results) GetResultsForIssues() []github.Issue {
@@ -40,7 +40,7 @@ func (currResults *results) append(newResults *resultsInterface) {
 		currLastCreatedIssueTime := currResults.GetLastCreatedIssueTime()
 		newResultsLastCreatedIssueTime := (*newResults).GetLastCreatedIssueTime()
 		if currLastCreatedIssueTime == nil || newResultsLastCreatedIssueTime.After(*currLastCreatedIssueTime) {
-			currResults.lastCreatedIssue = newResultsLastCreatedIssueTime
+			currResults.lastCreatedIssueTime = newResultsLastCreatedIssueTime
 		}
 		currResults.issues = append(currResults.issues, (*newResults).GetResultsForIssues()...)
 	}
@@ -48,30 +48,30 @@ func (currResults *results) append(newResults *resultsInterface) {
 		currLastCreatedPRTime := currResults.GetLastCreatedPRTime()
 		newResultsLastCreatedPRTime := (*newResults).GetLastCreatedPRTime()
 		if currLastCreatedPRTime == nil || newResultsLastCreatedPRTime.After(*currLastCreatedPRTime) {
-			currResults.lastCreatedPR = newResultsLastCreatedPRTime
+			currResults.lastCreatedPRTime = newResultsLastCreatedPRTime
 		}
 		currResults.prs = append(currResults.prs, (*newResults).GetResultsForPRs()...)
 	}
 }
 
 func (results *results) GetLastCreatedIssueTime() *time.Time {
-	// QUESTION: do you need currResults.lastCreatedPR.IsZero()?
-	if results.lastCreatedIssue == nil || results.lastCreatedIssue.IsZero() {
+	// QUESTION: do you need currResults.lastCreatedPRTime.IsZero()?
+	if results.lastCreatedIssueTime == nil || results.lastCreatedIssueTime.IsZero() {
 		if len(results.issues) == 0 {
 			return nil
 		}
-		results.lastCreatedIssue = &(results.issues[len(results.issues)-1]).CreatedAt
+		results.lastCreatedIssueTime = &(results.issues[len(results.issues)-1]).CreatedAt
 	}
-	return results.lastCreatedIssue
+	return results.lastCreatedIssueTime
 }
 
 func (results *results) GetLastCreatedPRTime() *time.Time {
-	// QUESTION: do you need currResults.lastCreatedPR.IsZero()?
-	if results.lastCreatedPR == nil || results.lastCreatedPR.IsZero() {
+	// QUESTION: do you need currResults.lastCreatedPRTime.IsZero()?
+	if results.lastCreatedPRTime == nil || results.lastCreatedPRTime.IsZero() {
 		if len(results.prs) == 0 {
 			return nil
 		}
-		results.lastCreatedPR = &(results.prs[len(results.prs)-1]).CreatedAt
+		results.lastCreatedPRTime = &(results.prs[len(results.prs)-1]).CreatedAt
 	}
-	return results.lastCreatedPR
+	return results.lastCreatedPRTime
 }
