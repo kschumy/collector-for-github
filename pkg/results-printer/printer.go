@@ -1,4 +1,4 @@
-package main
+package results_printer
 
 import (
 	"fmt"
@@ -12,7 +12,7 @@ import (
 	"github.com/collector-for-github/pkg/github-query/types"
 )
 
-func main() {
+func PrintResults() {
 	currTime := time.Now()
 	request, err := getRequest(currTime)
 	if err != nil {
