@@ -60,14 +60,17 @@ func (seed *Seed) SeedIssues() error {
 	if err != nil {
 		return err
 	}
+	
+	sleepDuration := SecondsToWait * time.Second
+	
 	for i := seed.StartNum; i < seed.StartNum+seed.Quantity; i++ {
 		reqString := seedInfo.getReqString(i, seed.IncludeNum)
-		logger.Info("%v: %#v", i, reqString)
+		logger.Debug("%v: %#v", i, reqString)
 		err := generateIssue(reqString, seed.UserRepo)
 		if err != nil {
 			return err
 		}
-		time.Sleep(SecondsToWait * time.Second) // GitHub rate limits prohibit more than 30 calls/minute
+		time.Sleep(sleepDuration) // GitHub rate limits prohibit more than 30 calls/minute
 	}
 	logger.Info("Seeded %v issues to %s", seed.Quantity, seed.UserRepo)
 	return nil
@@ -125,12 +128,7 @@ func (sv *seedValues) getRandomBody() string {
 		return sv.bothTermsTexts.getRandomString()
 	}
 
-	var randNum int
-	if sv.onlyOneTerm() {
-		randNum = getRandomNum(2)
-	} else {
-		randNum = getRandomNum(4)
-	}
+	randNum := getRandomNumBasedOnNumOfTerms(sv)
 
 	switch randNum {
 	case 0:
@@ -159,13 +157,9 @@ func (sv *seedValues) getRandomTitle() string {
 			insertString = sv.termOne + " " + sv.termOne
 		}
 	} else {
-		var randNum int
-		if sv.onlyOneTerm() {
-			randNum = getRandomNum(2)
-		} else {
-			randNum = getRandomNum(4)
-		}
-
+		
+		randNum := getRandomNumBasedOnNumOfTerms(sv)
+		
 		switch randNum {
 		case 0:
 			return titleWordOne + " " + titleWordTwo
@@ -217,6 +211,13 @@ func (sv *seedValues) getRandomLabel() string {
 func getRandomNum(n int) int {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(n)
+}
+
+func getRandomNumBasedOnNumOfTerms(sv *seedValues) int {
+	if sv.onlyOneTerm() {
+		return getRandomNum(2)
+	}
+	return getRandomNum(4)
 }
 
 func (seed *Seed) createSeedIssues() (*seedValues, error) {
