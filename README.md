@@ -1,3 +1,5 @@
+# NOT MAINTAINED
+
 ## About
 An AWS Lambda to query GitHub and post results
 
